@@ -41,7 +41,7 @@ final class ComponentTokenParser extends IncludeTokenParser
             $componentClass = $this->configuration->getRegisteredComponent($name);
         }
 
-        return $componentClass::make()
+        return $componentClass::make([], $this->configuration->getContainer())
             ->withName($name)
             ->withConfiguration($this->configuration);
     }

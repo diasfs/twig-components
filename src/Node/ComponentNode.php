@@ -42,6 +42,7 @@ final class ComponentNode extends IncludeNode
             ->write('$slotsStack = $slotsStack ?? [];' . PHP_EOL)
             ->write('$slotsStack[] = $slots ?? [];' . PHP_EOL)
             ->write('$slots = [];' . PHP_EOL)
+            ->write('$container = $context["DIContainer"] ?? null;')
             ->write("ob_start();"  . PHP_EOL)
             ->subcompile($this->getNode('slot'))
             ->write('$slot = ob_get_clean();' . PHP_EOL)
@@ -85,6 +86,7 @@ final class ComponentNode extends IncludeNode
         } else {
             $compiler->raw('[]');
         }
+        $compiler->write(', $container');
         $compiler->write(PHP_EOL . ')->getContext($slots, $slot,');
 
         if ($this->configuration->isUsingGlobalContext()) {

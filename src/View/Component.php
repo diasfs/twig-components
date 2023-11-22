@@ -2,6 +2,7 @@
 
 namespace Performing\TwigComponents\View;
 
+use DI\Container;
 use Performing\TwigComponents\Configuration;
 use ReflectionClass;
 use ReflectionParameter;
@@ -54,14 +55,20 @@ abstract class Component
      * @param  array  $data
      * @return static
      */
-    public static function make($data = [])
+    public static function make($data = [], ?Container $container = null)
     {
         $parameters = static::extractConstructorParameters();
 
         if (static::class === AnonymousComponent::class) {
+            if ($container) {
+                return $container->make(static::class, [$data]);
+            }
             return new static($data);
         }
 
+        if ($container) {
+            return $container->make(static::class, [...array_intersect_key(array_merge($parameters, $data), $parameters)]);
+        }
         return new static(...array_intersect_key(array_merge($parameters, $data), $parameters));
     }
 

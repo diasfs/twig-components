@@ -1,5 +1,5 @@
 {
-    "name": "performing/twig-components",
+    "name": "diasfs/twig-components",
     "description": "Twig components extension",
     "keywords": [
         "digital",
@@ -17,6 +17,8 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "php-di/php-di": "^7.0",
+        "psr/container": "^2.0",
         "twig/twig": "^2.12.5 || ^3.0.0"
     },
     "require-dev": {
