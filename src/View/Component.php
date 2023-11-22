@@ -74,6 +74,8 @@ abstract class Component
 
     public function getContext($slots, $slot, $globalContext, $variables)
     {
+        $this->setup();
+
         $context = [];
 
         $context = array_merge($context, $globalContext);
@@ -93,4 +95,5 @@ abstract class Component
     }
 
     abstract public function template(): string;
+    abstract public function setup();
 }
