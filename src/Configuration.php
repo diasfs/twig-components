@@ -2,10 +2,12 @@
 
 namespace Performing\TwigComponents;
 
+use DI\Container;
 use Performing\TwigComponents\Extension\ComponentExtension;
 use Performing\TwigComponents\Lexer\ComponentLexer;
 use Performing\TwigComponents\View\ComponentAttributeBag;
 use Performing\TwigComponents\View\ComponentSlot;
+use Psr\Container\ContainerInterface;
 use Twig\Environment;
 
 class Configuration
@@ -24,6 +26,9 @@ class Configuration
 
     protected ?string $componentsNamespace = null;
 
+    protected array $registeredComponents = [];
+    protected ?Container $container = null;
+
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;
@@ -32,6 +37,16 @@ class Configuration
     public static function make(Environment $twig): Configuration
     {
         return new static($twig);
+    }
+
+    public function setContainer(Container $container) {
+        $this->container = $container;
+        $this->twig->addGlobal('DIContainer', $container);
+        return $this;
+    }
+
+    public function getContainer(): ?Container {
+        return $this->container;
     }
 
     /**
@@ -90,7 +105,7 @@ class Configuration
      */
     public function setComponentsNamespace(string $namespace): self
     {
-        $this->namespace = $namespace;
+        $this->componentsNamespace = $namespace;
 
         return $this;
     }
@@ -134,6 +149,26 @@ class Configuration
     public function isUsingCustomTags(): bool
     {
         return $this->isUsingCustomTags;
+    }
+
+    /**
+     * Manually register a component name with its class.
+     */
+    public function register(string $name, string $class): self
+    {
+        $this->registeredComponents[$name] = $class;
+
+        return $this;
+    }
+
+    public function hasRegisteredComponent(string $name): bool
+    {
+        return array_key_exists($name, $this->registeredComponents);
+    }
+
+    public function getRegisteredComponent(string $name): string
+    {
+        return $this->registeredComponents[$name];
     }
 
     /**
