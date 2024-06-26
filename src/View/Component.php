@@ -36,7 +36,7 @@ abstract class Component
      */
     protected static function extractConstructorParameters()
     {
-        if (! isset(static::$constructorParametersCache[static::class])) {
+        if (!isset(static::$constructorParametersCache[static::class])) {
             $class = new ReflectionClass(static::class);
 
             $constructor = $class->getConstructor();
@@ -74,6 +74,8 @@ abstract class Component
 
     public function getContext($slots, $slot, $globalContext, $variables)
     {
+        $this->setup();
+
         $context = [];
 
         $context = array_merge($context, $globalContext);
@@ -93,4 +95,5 @@ abstract class Component
     }
 
     abstract public function template(): string;
+    abstract public function setup();
 }
